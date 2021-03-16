@@ -631,6 +631,8 @@ class FacetGrid(Grid):
         # If color was a keyword argument, grab it here
         kw_color = kwargs.pop("color", None)
 
+        title_kws = kwargs.pop("title_kws", {})
+
         if hasattr(func, "__module__"):
             func_module = str(func.__module__)
         else:
@@ -684,7 +686,7 @@ class FacetGrid(Grid):
             self._facet_plot(func, ax, plot_args, kwargs)
 
         # Finalize the annotations and layout
-        self._finalize_grid(args[:2])
+        self._finalize_grid(args[:2], **title_kws)
 
         return self
 
@@ -720,6 +722,7 @@ class FacetGrid(Grid):
         # If color was a keyword argument, grab it here
         kw_color = kwargs.pop("color", None)
 
+        title_kws = kwargs.pop("title_kws", {})
         # Iterate over the data subsets
         for (row_i, col_j, hue_k), data_ijk in self.facet_data():
 
@@ -750,7 +753,7 @@ class FacetGrid(Grid):
             self._facet_plot(func, ax, args, kwargs)
 
         # Finalize the annotations and layout
-        self._finalize_grid(args[:2])
+        self._finalize_grid(args[:2], **title_kws)
 
         return self
 
@@ -777,10 +780,10 @@ class FacetGrid(Grid):
         self._update_legend_data(ax)
         self._clean_axis(ax)
 
-    def _finalize_grid(self, axlabels):
+    def _finalize_grid(self, axlabels, **kwargs):
         """Finalize the annotations and layout."""
         self.set_axis_labels(*axlabels)
-        self.set_titles()
+        self.set_titles(**kwargs)
         self.tight_layout()
 
     def facet_axis(self, row_i, col_j):
