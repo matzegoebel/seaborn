@@ -302,7 +302,7 @@ class FacetGrid(Grid):
         sharex=True, sharey=True, height=3, aspect=1, palette=None,
         row_order=None, col_order=None, hue_order=None, hue_kws=None,
         dropna=False, legend_out=True, despine=True,
-        margin_titles=False, xlim=None, ylim=None, subplot_kws=None,
+        margin_titles=True, xlim=None, ylim=None, subplot_kws=None,
         gridspec_kws=None, size=None
     ):
 
