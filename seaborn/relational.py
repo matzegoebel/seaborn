@@ -925,7 +925,7 @@ def relplot(
     palette=None, hue_order=None, hue_norm=None,
     sizes=None, size_order=None, size_norm=None,
     markers=None, dashes=None, style_order=None,
-    legend="auto", kind="scatter",
+    legend="auto", kind="line",
     height=5, aspect=1, facet_kws=None,
     units=None,
     **kwargs
