@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import xarray as xr
 
 from ._core import (
     VectorPlotter,
@@ -955,6 +956,18 @@ def relplot(
         warnings.warn(msg, UserWarning)
         kwargs.pop("ax")
 
+    data_xr = None
+    if isinstance(data, (xr.DataArray, xr.Dataset)):
+        if isinstance(data, xr.DataArray):
+            if data.name is None:
+                data.name = "value"
+            if y is None:
+                y = data.name
+            elif x is None:
+                x = data.name
+        data_xr = data
+        data = data.to_dataframe().reset_index()
+
     # Use the full dataset to map the semantics
     p = plotter(
         data=data,
@@ -1042,9 +1055,20 @@ def relplot(
     g.map_dataframe(func, **plot_kws)
 
     # Label the axes
-    g.set_axis_labels(
-        variables.get("x", None), variables.get("y", None)
-    )
+
+    labels = [variables.get("x", None), variables.get("y", None)]
+    if data_xr is not None:
+        for i, label in enumerate(labels):
+            if isinstance(data_xr, xr.DataArray) and (label == data_xr.name):
+                attrs = data_xr.attrs
+            else:
+                attrs = data_xr[label].attrs
+
+            if ("units" in attrs) and (attrs["units"] != ""):
+                labels[i] += f" ({attrs['units']})"
+
+
+    g.set_axis_labels(*labels)
 
     # Show the legend
     if legend:
