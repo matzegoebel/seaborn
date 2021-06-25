@@ -931,6 +931,13 @@ def relplot(
     **kwargs
 ):
 
+    if row in ["x", "y"]:
+            data = data.rename({row: row.upper()})
+            row = row.upper()
+    if col in ["x", "y"]:
+            data = data.rename({col: col.upper()})
+            col = col.upper()
+
     if kind == "scatter":
 
         plotter = _ScatterPlotter
