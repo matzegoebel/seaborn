@@ -963,6 +963,9 @@ def relplot(
         warnings.warn(msg, UserWarning)
         kwargs.pop("ax")
 
+    if data is None:
+        xr.ValueError("No data given!")
+
     data_xr = None
     if isinstance(data, (xr.DataArray, xr.Dataset)):
         if isinstance(data, xr.DataArray):
