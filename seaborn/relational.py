@@ -967,7 +967,12 @@ def relplot(
         xr.ValueError("No data given!")
 
     data_xr = None
+    data_xr_ds = None
     if isinstance(data, (xr.DataArray, xr.Dataset)):
+        if isinstance(data, xr.Dataset) and ("variable" not in data.variables) \
+                                        and (row == "variable" or col == "variable"):
+            data_xr_ds = data
+            data = data.to_array()
         if isinstance(data, xr.DataArray):
             if data.name is None:
                 data.name = "value"
@@ -1076,9 +1081,22 @@ def relplot(
 
             if ("units" in attrs) and (attrs["units"] != ""):
                 labels[i] += f" ({attrs['units']})"
-
-
     g.set_axis_labels(*labels)
+    if data_xr_ds is not None:
+        for loc, ax in g.axes_dict.items():
+            if (row is None) or (col is None):
+                var = loc
+            elif row == "variable":
+                var = loc[0]
+            else:
+                var = loc[1]
+            if "units" in data_xr_ds[var].attrs:
+                var += f" ({data_xr_ds[var].units})"
+            if labels[0] == "value":
+                ax.set_xlabel(var)
+            else:
+                ax.set_ylabel(var)
+
 
     # Show the legend
     if legend:
