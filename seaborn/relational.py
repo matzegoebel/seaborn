@@ -1071,7 +1071,7 @@ def relplot(
 
     # Label the axes
 
-    labels = [variables.get("x", None), variables.get("y", None)]
+    labels = [x, y]
     if data_xr is not None:
         for i, label in enumerate(labels):
             if isinstance(data_xr, xr.DataArray) and (label == data_xr.name):
